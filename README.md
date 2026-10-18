@@ -1,57 +1,87 @@
 # Adobe Stock Scraper Fetcher
 
-Adobe Stock data fetcher using Apify actor [`kawsar/adobe-stock-scraper`](https://apify.com/kawsar/adobe-stock-scraper).
+> Professional Adobe Stock data fetcher powered by Apify actor [`kawsar/adobe-stock-scraper`](https://apify.com/kawsar/adobe-stock-scraper)
 
-Fetches assets by keywords, saves individual + combined results as **CSV** and **JSON**.
+Fetches high-quality stock assets by keywords, exports clean **CSV** + **JSON**, and automatically removes duplicates.
 
-## Setup
+---
 
-1. Get your Apify API token from [Apify Console](https://console.apify.com/account/integrations)
-2. Set the environment variable:
+## Features
 
-**Windows (PowerShell):**
+- Multi-keyword support in one run
+- Automatic duplicate removal (by `assetId`)
+- Flattened CSV output (nested fields handled)
+- Configurable max items & sort order
+- Rate-limit friendly (delay between keywords)
+- Clean project structure
+
+---
+
+## Quick Start
+
+### 1. Install dependency
+
+```bash
+pip install -r requirements.txt
+```
+
+### 2. Set your Apify token
+
+**Windows (PowerShell)**
 ```powershell
 $env:APIFY_TOKEN = "apify_api_xxxxx"
 ```
 
-**Linux / macOS:**
+**Linux / macOS**
 ```bash
 export APIFY_TOKEN="apify_api_xxxxx"
 ```
 
-3. Install dependency:
-```bash
-pip install requests
-```
-
-## Usage
+### 3. Run
 
 ```bash
-python tas_actor_fetch.py "keyword1,keyword2,keyword3" [max_items] [order]
+python tas_fetch.py "keyword1,keyword2,keyword3" [max_items] [order]
 ```
 
 ### Examples
 
 ```bash
-# Default: 200 items per keyword, ordered by downloads
-python tas_actor_fetch.py "ghibli,studio ghibli,miyazaki"
+# Default (200 items, ordered by downloads)
+python tas_fetch.py "ghibli,studio ghibli,miyazaki"
 
-# 800 items per keyword, ordered by downloads
-python tas_actor_fetch.py "ghibli,studio ghibli,miyazaki" 800 downloads
+# 800 items per keyword
+python tas_fetch.py "ghibli,studio ghibli,miyazaki" 800 downloads
 
-# Custom order (relevance / newest / downloads etc.)
-python tas_actor_fetch.py "nature,landscape" 500 relevance
+# Custom order
+python tas_fetch.py "nature,landscape,mountain" 500 relevance
 ```
 
-## Output
+---
 
-All files are saved in the `tas_output/` folder:
+## Output Structure
 
-- `{keyword}.csv` + `{keyword}_raw.json` → per keyword
-- `all_combined.csv` + `all_combined_raw.json` → all results combined (duplicates removed by `assetId`)
+```
+tas_output/
+├── ghibli.csv
+├── ghibli_raw.json
+├── studio_ghibli.csv
+├── studio_ghibli_raw.json
+├── all_combined.csv          ← final clean file
+└── all_combined_raw.json
+```
+
+---
 
 ## Notes
 
 - Max items per query is capped at **1000** (actor limit)
 - Default order: `downloads`
-- 3 second delay between keywords to be polite to the API
+- 3-second delay between keywords
+- Output folder is auto-created and ignored by git
+
+---
+
+## Author
+
+**Ahmad Raza**  
+[GitHub](https://github.com/ahmadraza-automation)
